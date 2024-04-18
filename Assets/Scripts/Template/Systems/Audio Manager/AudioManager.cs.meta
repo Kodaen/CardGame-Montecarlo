@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: e09d5add8c23c4c8d84aa5365fa2829e
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _soundsData: {fileID: 11400000, guid: e6b0d771f2683408fab267c6e210dd8a, type: 2}
+  - MusicGroup: {fileID: 4617244388992959899, guid: c9a8f60a4a3064cc4b2882ce5abf152f, type: 2}
+  - SoundGroup: {fileID: -299086951417417279, guid: c9a8f60a4a3064cc4b2882ce5abf152f, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
