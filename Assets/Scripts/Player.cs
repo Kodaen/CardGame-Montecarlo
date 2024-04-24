@@ -5,12 +5,12 @@ using UnityEngine;
 public class Player
 {
     private int MaxHP = 20;
-    private int CurrentHP;
+    public int CurrentHP;
     public int MaxMana = 0;
     public int CurrentMana;
     public int HandSize = 4;
 
-    private List<Card> Deck = new List<Card>();
+    public List<Card> Deck = new List<Card>();
     private List<Card> Hand = new List<Card>();
     public List<Card> Board = new List<Card>();
 
@@ -30,7 +30,7 @@ public class Player
         MaxMana = other.MaxMana;
         CurrentMana = other.CurrentMana;
         HandSize = other.HandSize;
-
+        
         for (int i = 0; i < other.Deck.Count; i++)
         {
             Deck.Add(other.Deck[i]);
@@ -116,13 +116,14 @@ public class Player
         return false;
     }
 
-    private bool DrawCardFromDeck()
+    public bool DrawCardFromDeck()
     {
         if (Hand.Count >= HandSize)
         {
             Debug.Log("Couldn't draw another card, hand already full");
             return false;
         }
+        if (Deck.Count == 0) { return false; }
         int rand = Random.Range(0, Deck.Count - 1);
 
         Hand.Add(Deck[rand]);
@@ -132,14 +133,70 @@ public class Player
 
     public void Attack(Player otherPlayer)
     {
-        foreach (var card in Board)
+        List<Card> enemyTauntCards = new List<Card>();
+        // Check if there are cards with provocation
+        foreach (Card enemyCard in otherPlayer.Board)
         {
-            otherPlayer.CurrentHP -= card.Attack;
+            if (enemyCard.HasTaunt)
+            {
+                enemyTauntCards.Add(enemyCard);
+            }
         }
+        int i = enemyTauntCards.Count -1;
+
+        for (int j = Board.Count - 1; j >= 0; j--)
+        {
+            if (i >= 0)
+            {
+                Board[j].TradeDamage(enemyTauntCards[i]);
+                if (enemyTauntCards[i].Defense <= 0)
+                {
+
+                    enemyTauntCards[i].ResetDefense();
+                    enemyTauntCards.Remove(enemyTauntCards[i]);
+                    i--;
+                }
+                if (Board[j].Defense <= 0)
+                {
+                    Board[j].ResetDefense();
+                    Board.Remove(Board[j]);
+                }
+            }
+            else
+            {
+                Board[j].TradeDamage(otherPlayer);
+            }
+        }
+
+        foreach (var item in otherPlayer.Board)
+        {
+            if (item.Defense > 0)
+            {
+                item.ResetDefense();
+            }
+        }
+
+        foreach (var item in Board)
+        {
+            if (item.Defense > 0)
+            {
+                item.ResetDefense();
+            }
+        }
+
     }
 
     public bool IsDefeated()
     {
         return (CurrentHP <= 0);
+    }
+    
+    public void SwapDeckCardFromList()
+    {
+        // Remove random card, and put another random card from SetList
+        int rand = Random.Range(0, Deck.Count - 1);
+        
+        Deck.RemoveAt(rand);
+        FillDeck();
     }
 }

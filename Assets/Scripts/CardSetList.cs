@@ -27,23 +27,59 @@ public class CardSetList
     private CardSetList()
     {
         cards = new List<Card>();
-        GenerateCards();
+        GenerateSetList();
     }
 
-    public void GenerateCards()
+    //public void GenerateCards()
+    //{
+    //    List<Card> cartes = new List<Card>();
+    //    for (int atk = 0; atk <= 12; atk++)
+    //    {
+    //        for (int def = 1; def <= 12; def++)
+    //        {
+    //            Card carte = new Card(atk, def);
+    //            if (carte.Cost <= 6)
+    //            {
+    //                cartes.Add(carte);
+    //            }
+    //        }
+    //    }
+    //    cards = cartes;
+    //}
+
+    public void GenerateSetList()
     {
-        List<Card> cartes = new List<Card>();
-        for (int atk = 0; atk <= 12; atk++)
+        int cardMaxCost = 8;
+        string str = "";
+        List<Card> newSetList = new List<Card>();
+        for (int atk = 0; atk <= cardMaxCost * 2; atk++)
         {
-            for (int def = 1; def <= 12; def++)
+            for (int def = 1; def <= cardMaxCost * 2; def++)
             {
-                Card carte = new Card(atk, def);
-                if (carte.Cost <= 6)
+                for (int taunt = 0; taunt <= 1; taunt++)
                 {
-                    cartes.Add(carte);
+                    for (int trample = 0; trample <= 1; trample++)
+                    {
+                        for (int distortion = 0; distortion <= 1; distortion++)
+                        {
+                            for (int firstStrike = 0; firstStrike <= 1; firstStrike++)
+                            {
+                                Card card = new Card(atk, def, taunt == 1, trample == 1, distortion == 1, firstStrike == 1);
+
+                                if (card.Cost <= 8)
+                                {
+                                    newSetList.Add(card);
+                                    str += card.ToString();
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-        cards = cartes;
+
+        GUIUtility.systemCopyBuffer = str;
+
+        cards = newSetList;
     }
 }
